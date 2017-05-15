@@ -1,3 +1,5 @@
+May 15th, 2017: Local copy for CCaC. 
+
 # AgriCraft [![build]][build-link] ![branch][] ![minecraft][] [![curse]][curse-link]
 
 Agricultural farming extended.
