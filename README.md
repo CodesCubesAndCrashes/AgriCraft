@@ -1,5 +1,5 @@
 May 15th, 2017: Local copy for CCaC. 
-Part 2: PR appraoch. 
+Part 2.5: Fixing approach. 
 
 # AgriCraft [![build]][build-link] ![branch][] ![minecraft][] [![curse]][curse-link]
 
