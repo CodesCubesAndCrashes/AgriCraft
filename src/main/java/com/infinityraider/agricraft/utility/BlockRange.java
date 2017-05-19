@@ -116,57 +116,14 @@ public class BlockRange implements Iterable<BlockPos> {
 
 	@Override
 	public Iterator<BlockPos> iterator() {
-		return new BlockRangeIterator(this);
+		return this.stream().iterator(); 
 	}
 
 	public Stream<BlockPos> stream() {
-		return StreamSupport.stream(this.spliterator(), false);
-	}
-
-	public class BlockRangeIterator implements Iterator<BlockPos> {
-
-		private int x, y, z;
-		private final BlockRange range;
-
-		public BlockRangeIterator(BlockRange range) {
-			this.range = range;
-			this.x = range.minX;
-			this.y = range.minY;
-			this.z = range.minZ;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return this.x <= this.range.getMaxX()
-					&& this.y <= this.range.getMaxY()
-					&& this.z <= this.range.getMaxZ();
-		}
-
-		@Override
-		public BlockPos next() {
-			// Ensure haven't fallen out of bounds.
-			if (!hasNext()) {
-				throw new IndexOutOfBoundsException();
-			}
-			
-			// Create point to return.
-			final BlockPos pos = new BlockPos(x, y, z);
-			
-			// Post-Increment
-			this.x += 1;
-			if (this.x > this.range.getMaxX()) {
-				this.x -= 1;
-				this.y += 1;
-				if (this.y > this.range.getMaxY()) {
-					this.y -= 1;
-					this.z += 1;
-				}
-			}
-			
-			// Return point.
-			return pos;
-		}
-
+	  return IntStream.rangeClosed(this.minY, this.maxY).flatMap(y -> 
+	         IntStream.rangeClosed(this.minX, this.maxX).flatMap(x -> 
+	         IntStream.rangeClosed(this.minZ, this.maxZ).mapToObj(z -> 
+	         new BlockPos(x, y, z)))); 
 	}
 
 }
