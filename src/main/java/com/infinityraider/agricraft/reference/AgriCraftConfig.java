@@ -45,15 +45,12 @@ public class AgriCraftConfig {
     public static int channelCapacity = 500;
 
     // Sprinkler
-    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler growth interval", min = "1", max = "300", comment = "Every x seconds each plant in sprinkler range has y chance to growth tick.")
-    public static int sprinklerGrowthInterval = 5;
-    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler growth chance", min = "0", max = "100", comment = "Every x seconds each plant in sprinkler range has this chance to growth tick")
-    public static int sprinklerGrowthChance = 20;
-    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler water usage", min = "0", max = "10000", comment = "Water usage of the sprinkler in mB per second")
-    public static int sprinklerRatePerSecond = 10;
-    public static int sprinklerRatePerHalfSecond = 5;
-    public static float sprinklerGrowthChancePercent = 0.1f;
+    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler irrigation interval minimum", min = "1", max = "1200", comment = "The minimum number of ticks between the successive starts of irrigation. No effect if its less than the time required to actually finish.")
     public static int sprinklerGrowthIntervalTicks = 100;
+    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler growth chance", min = "0", max = "100", comment = "Every interval, each plant in sprinkler range has this chance to get a growth tick from the sprinkler.")
+    public static int sprinklerGrowthChance = 20;
+    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler water usage", min = "0", max = "10000", comment = "Water usage of the sprinkler in mB per second.")
+    public static int sprinklerRatePerSecond = 10;
 
     // Farming
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Fertilizer Mutations", comment = "Set to false if you wish to disable using fertilizers on a cross crop to force a mutation.")
