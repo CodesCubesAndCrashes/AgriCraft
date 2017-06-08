@@ -26,7 +26,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntitySprinkler extends TileEntityBase implements ITickable, IIrrigationComponent {
+public class TileEntitySprinkler extends TileEntityBase implements ITickable, IIrrigationComponent, IAgriDisplayable {
 
     private int buffer = 0;
     private int counter = 0;
@@ -297,4 +297,10 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
         Minecraft.getMinecraft().effectRenderer.addEffect(liquidSpray);
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addDisplayInfo(Consumer<String> information) {
+        // Borrowed from TileEntityChannel.
+        information.accept(AgriCore.getTranslator().translate("agricraft_tooltip.waterLevel") + ": " + this.getFluidAmount(0) + "/" + BUFFER_CAP);
+    }
 }
