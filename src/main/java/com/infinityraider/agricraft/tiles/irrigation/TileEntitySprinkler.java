@@ -1,8 +1,10 @@
 package com.infinityraider.agricraft.tiles.irrigation;
 
+import com.agricraft.agricore.core.AgriCore;
 import com.infinityraider.agricraft.api.v1.irrigation.IConnectable;
 import com.infinityraider.agricraft.api.v1.irrigation.IIrrigationComponent;
 import com.infinityraider.agricraft.api.v1.irrigation.IrrigationConnectionType;
+import com.infinityraider.agricraft.api.v1.misc.IAgriDisplayable;
 import com.infinityraider.agricraft.blocks.irrigation.BlockWaterChannel;
 import com.infinityraider.agricraft.reference.AgriCraftConfig;
 import com.infinityraider.agricraft.reference.AgriNBT;
@@ -25,6 +27,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.function.Consumer;
 
 public class TileEntitySprinkler extends TileEntityBase implements ITickable, IIrrigationComponent, IAgriDisplayable {
 
@@ -33,7 +36,7 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
     private float angle = 0.0F;
     private boolean active = false;
     public static final int BUFFER_CAP = 100;
-    private final int TICKS_PER_SECOND = 20; // TODO: Don't hardcode?
+    private final int TICKS_PER_SECOND = 20;
     private static final int COVERAGE_HEIGHT = 5; // Configure here.
     private static final int COVERAGE_RADIUS = 3; // Configure here.
     private static final int COVERAGE_DIAMETER = 1 + 2 * COVERAGE_RADIUS;
@@ -112,7 +115,7 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
 
     //checks if the sprinkler is CONNECTED to an irrigation channel
     public boolean isConnected() {
-        return this.worldObj != null && this.worldObj.getBlockState(getPos().add(0, 1, 0)).getBlock() instanceof BlockWaterChannel;
+        return this.worldObj != null && this.worldObj.getBlockState(getPos().up()).getBlock() instanceof BlockWaterChannel;
     }
 
     @Override
@@ -132,7 +135,7 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
             this.waterUsageRemainingTicks -= 1;
 
             // Step 3: Check if there is enough water to irrigate this tick, and if this is a change.
-            final boolean currentActiveness = this.buffer >= this.waterUsageThisTick;
+            final boolean currentActiveness = (this.buffer >= this.waterUsageThisTick && this.buffer > 0);
             if (currentActiveness != this.active) {
                 this.active = currentActiveness;
                 this.markForUpdate();
@@ -263,7 +266,7 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
     public TextureAtlasSprite getChannelIcon() {
         // Fetch the Icon using the handy world helper class.
         return WorldHelper
-                .getTile(worldObj, pos.add(0, 1, 0), TileEntityChannel.class)
+                .getTile(worldObj, pos.up(), TileEntityChannel.class)
                 .map(c -> c.getIcon())
                 .orElse(BaseIcons.OAK_PLANKS.getIcon());
     }
