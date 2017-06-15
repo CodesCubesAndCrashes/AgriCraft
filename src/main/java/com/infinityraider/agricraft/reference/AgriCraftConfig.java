@@ -1,6 +1,6 @@
 /*
  * AgriCraft Configuration File
- * 
+ *
  * This might not be *strictly* cleaner, but it is nicer.
  *
  */
@@ -45,9 +45,9 @@ public class AgriCraftConfig {
     public static int channelCapacity = 500;
 
     // Sprinkler
-    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler irrigation interval minimum", min = "1", max = "1200", comment = "The minimum number of ticks between the successive starts of irrigation. No effect if its less than the time required to actually finish.")
+    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler loop duration minimum", min = "1", max = "1200", comment = "The minimum number of ticks between the successive starts of irrigation. No effect if its less than the time required to actually finish.")
     public static int sprinklerGrowthIntervalTicks = 100;
-    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler growth chance", min = "0", max = "100", comment = "Every interval, each plant in sprinkler range has this chance to get a growth tick from the sprinkler.")
+    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler plant growth chance", min = "0", max = "100", comment = "Every loop, each plant in sprinkler range has this chance to get a growth tick from the sprinkler.")
     public static int sprinklerGrowthChance = 20;
     @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Sprinkler water usage", min = "0", max = "10000", comment = "Water usage of the sprinkler in mB per second.")
     public static int sprinklerRatePerSecond = 10;
