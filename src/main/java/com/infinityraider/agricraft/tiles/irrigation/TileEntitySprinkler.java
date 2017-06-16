@@ -152,47 +152,47 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
     }
 
     public void doSprinkle() {
-      // Step 1: if we're within bounds, search the next column.
-      if (this.columnCounter >= 0 && this.columnCounter < COVERAGE_AREA) {
-        final int targetX = this.pos.getX() - COVERAGE_RADIUS + (columnCounter % COVERAGE_DIAMETER);
-        final int targetZ = this.pos.getZ() - COVERAGE_RADIUS + (columnCounter / COVERAGE_DIAMETER);
-        final int lowestY = Math.max(this.pos.getY() - COVERAGE_HEIGHT, 0); // Avoid the void.
-        for (int targetY = this.pos.getY()-1; targetY >= lowestY; targetY -= 1) {
-          // First gather data.
-          BlockPos target = new BlockPos(targetX, targetY, targetZ);
-          IBlockState state = this.getWorld().getBlockState(target);
-          Block block = state.getBlock();
-          // Option A: Skip empty/air blocks.
-          // TODO: Is there a way to use isSideSolid to ignore minor obstructions? (Farmland isn't solid.)
-          if (block.isAir(state, this.getWorld(), target)) {
-            continue;
-          }
-          // Option B: Give plants a chance to grow, and then continue onward to irrigate the farmland too.
-          if (((block instanceof IPlantable) || (block instanceof IGrowable))
-              && (this.getWorld().rand.nextInt(100) < AgriCraftConfig.sprinklerGrowthChance)) {
-            block.updateTick(this.getWorld(), target, state, this.getWorld().rand);
-            continue;
-          }
-          // Option C: Dry farmland gets set as moist.
-          if (block instanceof BlockFarmland && state.getValue(BlockFarmland.MOISTURE) < 7) {
-            // Note: flags=2 instead of 6, because we're already updating less frequently.
-            this.getWorld().setBlockState(target, state.withProperty(BlockFarmland.MOISTURE, 7), 2);
-            break; // Unnecessary, but explicitly expresses the intent to stop.
-          }
-          // Option D: If it's none of the above, it blocks the sprinkler's irrigation. Stop.
-          break;
+        // Step 1: if we're within bounds, search the next column.
+        if (this.columnCounter >= 0 && this.columnCounter < COVERAGE_AREA) {
+            final int targetX = this.pos.getX() - COVERAGE_RADIUS + (columnCounter % COVERAGE_DIAMETER);
+            final int targetZ = this.pos.getZ() - COVERAGE_RADIUS + (columnCounter / COVERAGE_DIAMETER);
+            final int lowestY = Math.max(this.pos.getY() - COVERAGE_HEIGHT, 0); // Avoid the void.
+            for (int targetY = this.pos.getY()-1; targetY >= lowestY; targetY -= 1) {
+                // First gather data.
+                BlockPos target = new BlockPos(targetX, targetY, targetZ);
+                IBlockState state = this.getWorld().getBlockState(target);
+                Block block = state.getBlock();
+                // Option A: Skip empty/air blocks.
+                // TODO: Is there a way to use isSideSolid to ignore minor obstructions? (Farmland isn't solid.)
+                if (block.isAir(state, this.getWorld(), target)) {
+                    continue;
+                }
+                // Option B: Give plants a chance to grow, and then continue onward to irrigate the farmland too.
+                if (((block instanceof IPlantable) || (block instanceof IGrowable))
+                    && (this.getWorld().rand.nextInt(100) < AgriCraftConfig.sprinklerGrowthChance)) {
+                    block.updateTick(this.getWorld(), target, state, this.getWorld().rand);
+                    continue;
+                }
+                // Option C: Dry farmland gets set as moist.
+                if (block instanceof BlockFarmland && state.getValue(BlockFarmland.MOISTURE) < 7) {
+                    // Note: flags=2 instead of 6, because we're already updating less frequently.
+                    this.getWorld().setBlockState(target, state.withProperty(BlockFarmland.MOISTURE, 7), 2);
+                    break; // Unnecessary, but explicitly expresses the intent to stop.
+                }
+                // Option D: If it's none of the above, it blocks the sprinkler's irrigation. Stop.
+                break;
+            }
         }
-      }
 
-      // Step 2: Update the counter.
-      this.columnCounter += 1;
+        // Step 2: Update the counter.
+        this.columnCounter += 1;
 
-      // Step 3: If the counter exceeds both minimums, or if it is (incorrectly) negative, reset it.
-      if (   this.columnCounter >= COVERAGE_AREA
-          && this.columnCounter >= AgriCraftConfig.sprinklerGrowthIntervalTicks
-          || this.columnCounter < 0) {
-        this.columnCounter = 0;
-      }
+        // Step 3: If the counter exceeds both minimums, or if it is (incorrectly) negative, reset it.
+        if (   this.columnCounter >= COVERAGE_AREA
+            && this.columnCounter >= AgriCraftConfig.sprinklerGrowthIntervalTicks
+            || this.columnCounter < 0) {
+            this.columnCounter = 0;
+        }
     }
 
     @Override
