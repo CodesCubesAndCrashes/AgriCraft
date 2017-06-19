@@ -35,8 +35,8 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
     private int counter = 0;
     private float angle = 0.0F;
     private boolean active = false;
-    public static final int BUFFER_CAP = 100;
-    private final int TICKS_PER_SECOND = 20;
+    private static final int BUFFER_CAP = 100;
+    private static final int TICKS_PER_SECOND = 20;
     private static final int COVERAGE_HEIGHT = 5; // Configure here. Note: the lowest y-level will be farmland only.
     private static final int COVERAGE_RADIUS = 3; // Configure here.
     private static final int COVERAGE_DIAMETER = 1 + 2 * COVERAGE_RADIUS;
@@ -63,17 +63,24 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
     //this saves the data on the tile entity
     @Override
     public void writeTileNBT(NBTTagCompound tag) {
-        if (this.counter > 0)
+        if (this.counter > 0) {
             tag.setInteger(AgriNBT.LEVEL, this.counter);
-        tag.setBoolean(AgriNBT.ACTIVE, active);
-        if (this.buffer > 0)
+        }
+        if (this.active) {
+            tag.setBoolean(AgriNBT.ACTIVE, active);
+        }
+        if (this.buffer > 0) {
             tag.setInteger(AgriNBT.BUFFER, this.buffer);
-        if (this.columnCounter > 0)
+        }
+        if (this.columnCounter > 0) {
             tag.setInteger(AgriNBT.COLUMN_COUNTER, this.columnCounter);
-        if (this.waterUsageRemainingMillibuckets < Integer.MAX_VALUE)
+        }
+        if (this.waterUsageRemainingMillibuckets < Integer.MAX_VALUE) {
             tag.setInteger(AgriNBT.WATER_USAGE_REMAINING_MILLIBUCKETS, this.waterUsageRemainingMillibuckets);
-        if (this.waterUsageRemainingTicks > 0)
+        }
+        if (this.waterUsageRemainingTicks > 0) {
             tag.setInteger(AgriNBT.WATER_USAGE_REMAINING_TICKS, this.waterUsageRemainingTicks);
+        }
     }
 
     //this loads the saved data for the tile entity
@@ -161,14 +168,16 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
                 }
                 // Option B: Give plants a chance to grow, and then continue onward to irrigate the farmland too.
                 if ((block instanceof IPlantable || block instanceof IGrowable) && targetY != lowestY) {
-                    if (this.worldObj.rand.nextInt(100) < AgriCraftConfig.sprinklerGrowthChance)
+                    if (this.worldObj.rand.nextInt(100) < AgriCraftConfig.sprinklerGrowthChance) {
                         block.updateTick(this.worldObj, target, state, this.worldObj.rand);
+                    }
                     continue;
                 }
                 // Option C: Dry farmland gets set as moist.
                 if (block instanceof BlockFarmland) {
-                    if (state.getValue(BlockFarmland.MOISTURE) < 7)
+                    if (state.getValue(BlockFarmland.MOISTURE) < 7) {
                        this.worldObj.setBlockState(target, state.withProperty(BlockFarmland.MOISTURE, 7), 2);
+                    }
                     break; // Explicitly expresses the intent to stop.
                 }
                 // Option D: If it's none of the above, it blocks the sprinkler's irrigation. Stop.
@@ -295,7 +304,6 @@ public class TileEntitySprinkler extends TileEntityBase implements ITickable, II
     @Override
     @SideOnly(Side.CLIENT)
     public void addDisplayInfo(Consumer<String> information) {
-        // Borrowed from TileEntityChannel.
         information.accept(AgriCore.getTranslator().translate("agricraft_tooltip.waterLevel") + ": " + this.getFluidAmount(0) + "/" + BUFFER_CAP);
     }
 }
