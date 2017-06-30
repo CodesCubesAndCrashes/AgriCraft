@@ -20,6 +20,8 @@ import com.infinityraider.agricraft.reference.Constants;
 import com.infinityraider.infinitylib.block.tile.TileEntityBase;
 import com.infinityraider.infinitylib.utility.WorldHelper;
 import com.infinityraider.infinitylib.utility.debug.IDebuggable;
+
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -53,19 +55,25 @@ public class TileEntityCrop extends TileEntityBase implements IAgriCrop, IDebugg
             return MethodResult.PASS;
         }
 
-        // Otherwise attempt to do something with the event.
-        if (this.isCrossCrop() && AgriCraftConfig.crossOverChance > this.getRandom().nextDouble()) {
-            this.crossOver();
+        // Otherwise what happens depends on what state the crop is in.
+        if (this.isCrossCrop()) {
+            // Cross crops have a chance to attempt a random mutation
+            if (AgriCraftConfig.crossOverChance > this.getRandom().nextDouble()) {
+                this.crossOver();
+            }
             return MethodResult.SUCCESS;
         } else if (!this.hasSeed()) {
+            // Empty regular crops are given chances to
             this.spawn();
             return MethodResult.SUCCESS;
         } else if (this.isMature()) {
             this.spread();
             return MethodResult.SUCCESS;
-        } else if ((this.seed.getPlant().getGrowthChanceBase() + this.seed.getStat().getGrowth() * this.seed.getPlant().getGrowthChanceBonus()) * AgriCraftConfig.growthMultiplier > this.getRandom().nextDouble()) {
-            this.applyGrowthTick();
-            return MethodResult.SUCCESS;
+        } else {
+            if (this.seed.getEffectiveGrowthChance() > this.getRandom().nextDouble()) {
+                this.applyGrowthTick();
+                return MethodResult.SUCCESS;
+            }
         }
 
         // The method has failed.
@@ -398,7 +406,8 @@ public class TileEntityCrop extends TileEntityBase implements IAgriCrop, IDebugg
         }
 
         // Attempt to fertilize plant.
-        if (this.hasSeed() && this.getSeed().getPlant().isFertilizable() && this.getGrowthStage() < Constants.MATURE) {
+        if (this.hasSeed() && this.getSeed().getPlant().isFertilizable() && !this.isMature()) {
+            this.setGrowthStage(this.getGrowthStage() + 1);
             ((BlockCrop) AgriBlocks.getInstance().CROP).grow(getWorld(), rand, getPos(), getWorld().getBlockState(getPos()));
             return MethodResult.SUCCESS;
         }
