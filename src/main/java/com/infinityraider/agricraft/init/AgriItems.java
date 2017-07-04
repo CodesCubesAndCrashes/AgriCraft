@@ -31,6 +31,7 @@ public class AgriItems {
         AGRI_SEED = new ItemAgriSeed();
         AGRI_NUGGET = new ItemNugget();
         MAGNIFYING_GLASS = new ItemMagnifyingGlass();
+        DEBUG_FERTILIZER = new ItemDebugFertilizer();
     }
 
     public final ItemBase CROPS;
@@ -43,5 +44,6 @@ public class AgriItems {
     public final ItemBase AGRI_SEED;
     public final ItemBase AGRI_NUGGET;
     public final ItemBase MAGNIFYING_GLASS;
+    public final ItemBase DEBUG_FERTILIZER;
 
 }
