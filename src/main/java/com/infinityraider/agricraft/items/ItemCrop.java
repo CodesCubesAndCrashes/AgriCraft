@@ -1,17 +1,19 @@
 package com.infinityraider.agricraft.items;
 
+import com.agricraft.agricore.core.AgriCore;
 import com.infinityraider.agricraft.api.v1.AgriApi;
+import com.infinityraider.agricraft.api.v1.util.MethodResult;
 import com.infinityraider.agricraft.init.AgriBlocks;
 import com.infinityraider.agricraft.items.tabs.AgriTabs;
 import com.infinityraider.agricraft.reference.AgriCraftConfig;
 import com.infinityraider.agricraft.tiles.TileEntityCrop;
+import com.infinityraider.agricraft.utility.StackHelper;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.infinitylib.utility.IRecipeRegister;
 import com.infinityraider.infinitylib.utility.WorldHelper;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -21,6 +23,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ItemCrop extends ItemBase implements IItemWithModel, IRecipeRegister {
 
@@ -35,48 +40,47 @@ public class ItemCrop extends ItemBase implements IItemWithModel, IRecipeRegiste
         return true;
     }
 
-    // This is called when you right click with this item in hand.
+    /**
+     * This method manages the creation of BlockCrops in the world using ItemCrops.
+     * It targets a relative position based on the face provided.
+     * It checks that the target is an empty space, and that it is above a valid soil.
+     * It tries to be reasonably generic in order to support whatever blocks other mods might use.
+     */
     @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        // Skip if remote, or clicked wrong face of block.
-        if (world.isRemote || side != EnumFacing.UP) {
+    @Nonnull
+    public EnumActionResult onItemUse(@Nonnull ItemStack stack, @Nullable EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos,
+                                      @Nullable EnumHand hand, @Nullable EnumFacing side, float hitX, float hitY, float hitZ) {
+        // Step 1: Calculate where the crop is supposed to go. If `side` is null, use `pos` instead.
+        BlockPos cropPos = side == null ? pos : pos.offset(side);
+
+        // Step 2: Verify that the conditions are valid for creating the BlockCrop.
+        if (world.isRemote) {
+            // Only the server handles creating the BlockCrop.
+            return EnumActionResult.PASS;
+        } else if (!world.isAirBlock(cropPos) || !AgriApi.getSoilRegistry().contains(world.getBlockState(cropPos.down()))) {
+            // The placement position must be empty space, and above a valid block.
+            return EnumActionResult.PASS;
+        } else if (StackHelper.decreaseStackSize(player, stack, 1) == MethodResult.FAIL) {
+            // This should never fail, but we're being careful just in case there's something wrong with the stack.
+            AgriCore.getLogger("agricraft").error("Couldn't decrease stack size by one when creating a BlockCrop by right clicking with an ItemCrop.");
             return EnumActionResult.PASS;
         }
 
-        // Fetch information.
-        final BlockPos cropPos = pos.up();
+        // Step 3: Create a BlockCrop at the position.
+        world.setBlockState(cropPos, AgriBlocks.getInstance().CROP.getDefaultState());
 
-        // Test if placement is valid.
-        if (!world.isAirBlock(cropPos)) {
-            return EnumActionResult.FAIL;
-        }
-        
-        // Test if soil is valid.
-        if (!AgriApi.getSoilRegistry().contains(world.getBlockState(pos))) {
-            return EnumActionResult.FAIL;
-        }
-
-        // Set the block to a crop.
-        world.setBlockState(pos.up(), AgriBlocks.getInstance().CROP.getDefaultState());
-
-        // Remove the crop used from the stack.
-        stack.stackSize = player.capabilities.isCreativeMode ? stack.stackSize : stack.stackSize - 1;
-
-        // Handle sneak placing of crosscrops.
-        if (player.isSneaking() && stack.stackSize > 0) {
+        // Step 4: Turn the crop into a cross crop if the player is crouched and has another crop stick available.
+        if (player != null && player.isSneaking() && StackHelper.decreaseStackSize(player, stack, 1) != MethodResult.FAIL) {
             WorldHelper
-                    .getTile(world, pos.add(0, 1, 0), TileEntityCrop.class)
-                    .ifPresent(c -> {
-                        c.setCrossCrop(true);
-                        stack.stackSize = player.capabilities.isCreativeMode ? stack.stackSize : stack.stackSize - 1;
-                    });
+                    .getTile(world, cropPos, TileEntityCrop.class)
+                    .ifPresent(c -> c.setCrossCrop(true));
         }
 
-        // Play placement sound.
-        SoundType type = Blocks.LEAVES.getSoundType();
-        world.playSound(null, (double) ((float) cropPos.getX() + 0.5F), (double) ((float) cropPos.getY() + 0.5F), (double) ((float) cropPos.getZ() + 0.5F), type.getPlaceSound(), SoundCategory.PLAYERS, (type.getVolume() + 1.0F) / 4.0F, type.getPitch() * 0.8F);
+        // Step 5: Play the placement sound.
+        SoundType type = SoundType.PLANT;
+        world.playSound(player, pos, type.getPlaceSound(), SoundCategory.BLOCKS, (type.getVolume() + 1.0F) / 4.0F, type.getPitch() * 0.8F);
 
-        // Action was a success.
+        // Step 6: Report that the action was a success.
         return EnumActionResult.SUCCESS;
     }
 
