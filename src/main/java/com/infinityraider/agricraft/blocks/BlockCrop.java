@@ -1,5 +1,6 @@
 package com.infinityraider.agricraft.blocks;
 
+import com.agricraft.agricore.config.AgriConfig;
 import com.agricraft.agricore.util.TypeHelper;
 import com.infinityraider.agricraft.api.v1.AgriApi;
 import com.infinityraider.agricraft.api.v1.fertilizer.IAgriFertilizer;
@@ -10,6 +11,7 @@ import com.infinityraider.agricraft.api.v1.seed.AgriSeed;
 import com.infinityraider.agricraft.api.v1.util.MethodResult;
 import com.infinityraider.agricraft.init.AgriItems;
 import com.infinityraider.agricraft.items.ItemDebugger;
+import com.infinityraider.agricraft.reference.AgriCraftConfig;
 import com.infinityraider.agricraft.reference.AgriProperties;
 import com.infinityraider.agricraft.reference.Constants;
 import com.infinityraider.agricraft.reference.Reference;
@@ -207,34 +209,48 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
     }
 
     /**
-     * Determines if bonemeal may be applied to the plant contained in the
-     * crops.
+     * When enabled, this determines if there is a valid target for bonemeal here.
+     * Either this crop has a plant but it is not mature,
+     * or this is a cross-crop, and fertilizers causing mutations is enabled.
      *
-     * @return if bonemeal may be applied.
+     * @return If bonemeal should be consumed by this action.
      */
     @Override
     public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient) {
-        return this.getCrop(world, pos).map(crop -> crop.hasSeed() && !crop.isMature()).orElse(false);
+        return AgriCraftConfig.allowIGrowableOnCrop && this.getCrop(world, pos).map(crop -> {
+                if (crop.isCrossCrop()) {
+                    return AgriCraftConfig.fertilizerMutation;
+                } else {
+                    return crop.hasSeed() && !crop.isMature();
+                }
+        }).orElse(false);
     }
 
     /**
-     * Determines if bonemeal speeds up the GROWTH of the contained plant.
+     * This method should be called after canGrow is true, and should return if grow should be called.
+     * In vanilla, this method returns false when the game wants to consume bonemeal but not trigger grow this time.
      *
-     * @return false, so that we have full control over fertilizers.
+     *
+     * @return If the caller should call grow() on this block.
      */
     @Override
     public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state) {
-        return false;
+        return this.canGrow(world, pos, state, false); // No vanilla or AgriCraft implementation makes use of isClient.
     }
 
     /**
-     * Increments the contained plant's GROWTH stage. Generally, shouldn't be
-     * applied, but in the case that it is, it will simply act as a growth tick
-     * being added.
+     * WARNING: outside mods should implement IFertilizer, instead of utilizing IGrowable.
+     * This is the vanilla/generic method for triggering and speeding up growth.
+     * If the IGrowable interface is disabled in the config, then this does nothing.
+     * If it's enabled, then this calls the same method that updateTick would have.
+     * Normally, this is called by bonemeal, or mods that replicate the effect of it.
+     * The BonemealWrapper class instead turns ItemDye into a proper AgriCraft fertilizer.
      */
     @Override
     public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
-        this.getCrop(world, pos).ifPresent(TileEntityCrop::onGrowthTick);
+        if (AgriCraftConfig.allowIGrowableOnCrop) {
+            this.getCrop(world, pos).ifPresent(TileEntityCrop::onGrowthTick);
+        }
     }
 
     /**

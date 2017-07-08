@@ -6,6 +6,8 @@ import com.infinityraider.agricraft.api.v1.plant.IAgriPlant;
 import com.infinityraider.agricraft.api.v1.stat.IAgriStat;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+
+import com.infinityraider.agricraft.reference.AgriCraftConfig;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -34,6 +36,13 @@ public final class AgriSeed {
     @Nonnull
     public IAgriStat getStat() {
         return this.stat;
+    }
+
+    @Nonnull
+    public double getEffectiveGrowthChance() {
+        return (                          this.plant.getGrowthChanceBase()
+                + this.stat.getGrowth() * this.plant.getGrowthChanceBonus())
+                * AgriCraftConfig.growthMultiplier;
     }
 
     @Nonnull
