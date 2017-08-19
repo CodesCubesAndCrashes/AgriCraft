@@ -32,7 +32,7 @@ public class SpreadStrategy implements IAgriCrossStrategy {
             if (seed != null && rand.nextDouble() < seed.getPlant().getSpreadChance()) {
                 return AgriApi.getStatCalculatorRegistry()
                         .valueOf(seed.getPlant())
-                        .map(calc -> calc.calculateSpreadStats(seed.getPlant(), matureNeighbours))
+                        .map(calc -> calc.calculateSpreadStats(seed.getPlant(), matureNeighbours, rand))
                         .map(stat -> new AgriSeed(seed.getPlant(), stat));
             }
         }

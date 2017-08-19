@@ -1,9 +1,11 @@
 package com.infinityraider.agricraft.farming.mutation.statcalculator;
 
+import com.agricraft.agricore.util.MathHelper;
 import com.infinityraider.agricraft.api.v1.plant.IAgriPlant;
 import com.infinityraider.agricraft.api.v1.stat.IAgriStatCalculator;
 import com.infinityraider.agricraft.reference.AgriCraftConfig;
 import java.util.Optional;
+import java.util.Random;
 
 public class StatCalculatorHardcore extends StatCalculatorBase {
 
@@ -12,7 +14,7 @@ public class StatCalculatorHardcore extends StatCalculatorBase {
      * a divisor
      */
     @Override
-    protected int calculateStat(int input, int neighbours, int divisor) {
+    protected int calculateStat(int input, int neighbours, int divisor, Random rand) {
         /*
         1 parent: 3/4 decrement, 1/4 nothing
         2 parents: 2/4 decrement, 1/4 nothing, 1/4 increment
@@ -22,21 +24,21 @@ public class StatCalculatorHardcore extends StatCalculatorBase {
         if (neighbours == 1 && AgriCraftConfig.singleSpreadsIncrement) {
             neighbours = 2;
         }
-        int newStat = getAction(neighbours).apply(input) / divisor;
-        return Math.max(1, Math.min(newStat, AgriCraftConfig.cropStatCap));
+        int newStat = getAction(neighbours, rand).apply(input) / divisor;
+        return MathHelper.inRange(newStat, 1, AgriCraftConfig.cropStatCap);
     }
 
-    private Action getAction(int count) {
+    private Action getAction(int count, Random rand) {
         int totalWeight = 0;
         Action[] actions = Action.values();
         for (Action action : actions) {
             totalWeight = totalWeight + action.getWeight(count);
         }
         int randomIndex = -1;
-        double random = Math.random() * totalWeight;
+        int random = rand.nextInt(totalWeight);
         for (int i = 0; i < actions.length; i++) {
             random = random - actions[i].getWeight(count);
-            if (random <= 0.0D) {
+            if (random <= 0) {
                 randomIndex = i;
                 break;
             }
@@ -59,7 +61,7 @@ public class StatCalculatorHardcore extends StatCalculatorBase {
 
         public int getWeight(int count) {
             count--;
-            count = Math.max(Math.min(count, weights.length - 1), 0);
+            count = MathHelper.inRange(count, 0, weights.length-1);
             return weights[count];
         }
 

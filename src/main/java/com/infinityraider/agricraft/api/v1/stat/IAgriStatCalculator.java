@@ -4,6 +4,7 @@ import com.infinityraider.agricraft.api.v1.crop.IAgriCrop;
 import com.infinityraider.agricraft.api.v1.mutation.IAgriMutation;
 import com.infinityraider.agricraft.api.v1.plant.IAgriPlant;
 import java.util.Collection;
+import java.util.Random;
 import javax.annotation.Nonnull;
 
 /**
@@ -21,16 +22,17 @@ public interface IAgriStatCalculator {
      * @return an ISeedStats object containing the resulting stats
      */
     @Nonnull
-    IAgriStat calculateSpreadStats(@Nonnull IAgriPlant child, @Nonnull Collection<IAgriCrop> input);
+    IAgriStat calculateSpreadStats(@Nonnull IAgriPlant child, @Nonnull Collection<IAgriCrop> input, @Nonnull Random rand);
 
     /**
      * Calculates the stats for a mutation.
      *
      * @param mutation The mutation that occurred.
      * @param input a List containing all neighboring crops
+     * @param rand
      * @return an ISeedStats object containing the resulting stats
      */
     @Nonnull
-    IAgriStat calculateMutationStats(@Nonnull IAgriMutation mutation, @Nonnull Collection<IAgriCrop> input);
+    IAgriStat calculateMutationStats(@Nonnull IAgriMutation mutation, @Nonnull Collection<IAgriCrop> input, @Nonnull Random rand);
 
 }

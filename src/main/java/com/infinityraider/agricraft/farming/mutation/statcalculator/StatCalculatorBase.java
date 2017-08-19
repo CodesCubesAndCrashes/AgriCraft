@@ -11,11 +11,12 @@ import com.infinityraider.agricraft.farming.PlantStats;
 import com.infinityraider.agricraft.reference.AgriCraftConfig;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Random;
 
 public abstract class StatCalculatorBase implements IAgriStatCalculator, IAgriAdapter<IAgriStatCalculator> {
 
     @Override
-    public IAgriStat calculateSpreadStats(IAgriPlant child, Collection<IAgriCrop> parents) {
+    public IAgriStat calculateSpreadStats(IAgriPlant child, Collection<IAgriCrop> parents, Random rand) {
         // Validate parameters.
         Objects.requireNonNull(child, "The child plant to calculate the stats for must not be null!");
         Objects.requireNonNull(parents, "The set of parents to calculate the child's stats from must not be null!");
@@ -71,14 +72,14 @@ public abstract class StatCalculatorBase implements IAgriStatCalculator, IAgriAd
 
         // Return the new plant stat.
         return new PlantStats(
-                calculateStat(growth, validParents, 1),
-                calculateStat(gain, validParents, 1),
-                calculateStat(strength, validParents, 1)
+                calculateStat(growth, validParents, 1, rand),
+                calculateStat(gain, validParents, 1, rand),
+                calculateStat(strength, validParents, 1, rand)
         );
     }
 
     @Override
-    public IAgriStat calculateMutationStats(IAgriMutation mutation, Collection<IAgriCrop> parents) {
+    public IAgriStat calculateMutationStats(IAgriMutation mutation, Collection<IAgriCrop> parents, Random rand) {
         // Validate parameters.
         Objects.requireNonNull(mutation, "The mutation to calculate the stats for must not be null!");
         Objects.requireNonNull(parents, "The set of parents to calculate the mutation result stats from must not be null!");
@@ -134,9 +135,9 @@ public abstract class StatCalculatorBase implements IAgriStatCalculator, IAgriAd
 
         // Return the new plant stat.
         return new PlantStats(
-                calculateStat(growth, validParents, AgriCraftConfig.cropStatDivisor),
-                calculateStat(gain, validParents, AgriCraftConfig.cropStatDivisor),
-                calculateStat(strength, validParents, AgriCraftConfig.cropStatDivisor)
+                calculateStat(growth, validParents, AgriCraftConfig.cropStatDivisor, rand),
+                calculateStat(gain, validParents, AgriCraftConfig.cropStatDivisor, rand),
+                calculateStat(strength, validParents, AgriCraftConfig.cropStatDivisor, rand)
         );
     }
 
@@ -144,7 +145,7 @@ public abstract class StatCalculatorBase implements IAgriStatCalculator, IAgriAd
      * calculates the new stats based on an input stat, the nr of neighbours and
      * a divisor
      */
-    protected abstract int calculateStat(int input, int neighbours, int divisor);
+    protected abstract int calculateStat(int input, int neighbours, int divisor, Random rand);
 
     /**
      * Calculates the divisor to use for the mean operation on the stats of the
