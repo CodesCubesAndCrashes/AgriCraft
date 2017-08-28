@@ -245,7 +245,7 @@ public class JsonPlant implements IAgriPlant {
                 .forEach(builder::addSoil);
 
         plant.getRequirement().getConditions().forEach(obj -> {
-            final Optional<FuzzyStack> stack = obj.toStack(FuzzyStack.class);
+            final Optional<FuzzyStack> stack = obj.toStack(FuzzyStack.class, obj.getAmount());
             if (stack.isPresent()) {
                 builder.addCondition(
                         new BlockCondition(
