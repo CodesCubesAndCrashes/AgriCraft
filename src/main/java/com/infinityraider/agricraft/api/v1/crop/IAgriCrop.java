@@ -63,16 +63,24 @@ public interface IAgriCrop extends IAgriSeedProvider, IAgriSeedAcceptor, IAgriFe
     boolean setCrossCrop(boolean status);
 
     /**
-     * @return if this crop is fertile and thus can grow
+     * @return true if this crop has a seed, and the requirements for growing are met.
+     *          This is irrespective of growth stage. A mature plant can be fertile.
      */
     default boolean isFertile() {
         return this.hasSeed() && this.isFertile(this.getSeed());
     }
 
+    /**
+     * A convenience method for checking the seed's plant.
+     * See {@link #isFertile(IAgriPlant)}.
+     */
     default boolean isFertile(AgriSeed seed) {
         return (seed != null) && this.isFertile(seed.getPlant());
     }
 
+    /**
+     * @return true if the growing requirements for the plant are satisfied by this crop.
+     */
     boolean isFertile(IAgriPlant plant);
 
     /**
