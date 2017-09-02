@@ -398,8 +398,8 @@ public class TileEntityCrop extends TileEntityBase implements IAgriCrop, IDebugg
         }
 
         // Attempt to fertilize plant.
-        if (this.hasSeed() && this.getSeed().getPlant().isFertilizable() && this.getGrowthStage() < Constants.MATURE) {
-            ((BlockCrop) AgriBlocks.getInstance().CROP).grow(getWorld(), rand, getPos(), getWorld().getBlockState(getPos()));
+        if (this.hasSeed() && this.getSeed().getPlant().isFertilizable() && !this.isMature()) {
+            this.applyGrowthTick();
             return MethodResult.SUCCESS;
         }
 
