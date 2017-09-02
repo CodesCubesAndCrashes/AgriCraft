@@ -317,6 +317,19 @@ public class TileEntityCrop extends TileEntityBase implements IAgriCrop, IDebugg
         return AgriApi.getSoilRegistry().get(state);
     }
 
+    public boolean acceptsGenericGrowthTick() {
+        if (AgriCraftConfig.allowIGrowableOnCrop) {
+            if (this.isCrossCrop()) {
+                return AgriCraftConfig.fertilizerMutation;
+            } else {
+                return this.hasSeed() && !this.isMature();
+            }
+        } else {
+            return false;
+        }
+
+    }
+
     // =========================================================================
     // IWeedable Methods
     // =========================================================================

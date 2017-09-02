@@ -213,17 +213,15 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
      * Either this crop has a plant but it is not mature,
      * or this is a cross-crop, and fertilizers causing mutations is enabled.
      *
+     * // No vanilla or AgriCraft implementation makes use of isClient.
+     *
      * @return If bonemeal should be consumed by this action.
      */
     @Override
     public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient) {
-        return AgriCraftConfig.allowIGrowableOnCrop && this.getCrop(world, pos).map(crop -> {
-                if (crop.isCrossCrop()) {
-                    return AgriCraftConfig.fertilizerMutation;
-                } else {
-                    return crop.hasSeed() && !crop.isMature();
-                }
-        }).orElse(false);
+        return this.getCrop(world, pos) // Don't trust state parameter.
+                   .map(TileEntityCrop::acceptsGenericGrowthTick)
+                   .orElse(false);
     }
 
     /**
@@ -235,7 +233,7 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
      */
     @Override
     public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state) {
-        return this.canGrow(world, pos, state, false); // No vanilla or AgriCraft implementation makes use of isClient.
+        return this.canGrow(world, pos, state, world.isRemote);
     }
 
     /**
@@ -248,7 +246,7 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
      */
     @Override
     public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
-        if (AgriCraftConfig.allowIGrowableOnCrop) {
+        if (this.canGrow(world, pos, state, world.isRemote)) {
             this.getCrop(world, pos).ifPresent(TileEntityCrop::onGrowthTick);
         }
     }
