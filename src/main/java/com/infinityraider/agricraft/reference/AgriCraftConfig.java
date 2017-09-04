@@ -58,6 +58,8 @@ public class AgriCraftConfig {
     // Farming
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Fertilizer Mutations", comment = "Set to false if you wish to disable using fertilizers on a cross crop to force a mutation.")
     public static boolean fertilizerMutation = false;
+    @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Allow generic growth ticks", comment = "For when a mod uses the IGrowable interface, instead of registering a fertilizer for compatability.")
+    public static boolean allowIGrowableOnCrop = true;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Disable Vanilla Farming", comment = "Set to true to disable vanilla farming, meaning you can only grow plants on crops.")
     public static boolean disableVanillaFarming = false;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Show Disabled Vanilla Farming Warning", comment = "Set to true to warn that vanilla farming is disabled when trying to plant vanilla plant.")

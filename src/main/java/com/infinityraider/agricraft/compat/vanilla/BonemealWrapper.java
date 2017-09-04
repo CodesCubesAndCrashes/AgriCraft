@@ -35,6 +35,7 @@ public class BonemealWrapper implements IAgriFertilizer, IAgriAdapter<IAgriFerti
     @Override
     public boolean applyFertilizer(EntityPlayer player, World world, BlockPos pos, IAgriFertilizable target, ItemStack stack, Random random) {
         if (target.acceptsFertilizer(this) && target.onApplyFertilizer(this, random) == MethodResult.SUCCESS) {
+            world.playEvent(2005, pos, 1);
             if (player == null || !player.capabilities.isCreativeMode) {
                 stack.stackSize = stack.stackSize - 1;
             }

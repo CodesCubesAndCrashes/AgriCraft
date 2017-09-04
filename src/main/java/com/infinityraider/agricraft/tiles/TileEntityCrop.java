@@ -385,9 +385,23 @@ public class TileEntityCrop extends TileEntityBase implements IAgriCrop, IDebugg
     @Override
     public boolean acceptsFertilizer(IAgriFertilizer fertilizer) {
         if (this.crossCrop) {
+            // This is a cross crop. A growth tick here will only have a chance at a cross over.
+            // Allow the fertilizer if both the config is enabled, and the fertilizer has the ability.
             return AgriCraftConfig.fertilizerMutation && fertilizer.canTriggerMutation();
+        } else {
+            // This is a regular crop. No cross overs can happen, so don't need to check those details.
+            if (!this.hasSeed()) {
+                // This crop is empty, so allow plants (such as weeds) to spawn.
+                return true;
+            } else if (this.getSeed().getPlant().isFertilizable()) {
+                // This crop has a plant that allows boosts from fertilizers.
+                // Note: a mature plant still has a chance to spread clones to neighboring crops.
+                return true;
+            } else {
+                // This crop has a plant that doesn't allow fertilizers.
+                return false;
+            }
         }
-        return this.hasSeed() && this.getSeed().getPlant().isFertilizable();
     }
 
     @Override
@@ -397,20 +411,14 @@ public class TileEntityCrop extends TileEntityBase implements IAgriCrop, IDebugg
             return MethodResult.PASS;
         }
 
-        // Attempt to fertilize plant.
-        if (this.hasSeed() && this.getSeed().getPlant().isFertilizable() && !this.isMature()) {
-            this.applyGrowthTick();
-            return MethodResult.SUCCESS;
+        // Check if this fertilizer is actually allowed here currently, in case the caller has screwed up.
+        if (!this.acceptsFertilizer(fertilizer)) {
+            return MethodResult.FAIL;
         }
 
-        // Attempt to perform mutation.
-        if (this.isCrossCrop() && AgriCraftConfig.fertilizerMutation && fertilizer.canTriggerMutation()) {
-            this.crossOver();
-            return MethodResult.SUCCESS;
-        }
-
-        // The action was a failure.
-        return MethodResult.FAIL;
+        // Otherwise everything is good, and a growth tick can be triggered.
+        this.onGrowthTick();
+        return MethodResult.SUCCESS;
     }
 
     // =========================================================================
