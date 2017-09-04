@@ -2,8 +2,6 @@
  */
 package com.infinityraider.agricraft.items.modes;
 
-import com.infinityraider.agricraft.api.v1.AgriApi;
-import com.infinityraider.agricraft.api.v1.util.FuzzyStack;
 import com.infinityraider.infinitylib.utility.WorldHelper;
 import com.infinityraider.infinitylib.utility.debug.DebugMode;
 import net.minecraft.block.IGrowable;
@@ -16,8 +14,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-
-import java.util.Optional;
 
 /**
  *
@@ -76,20 +72,12 @@ public class DebugModeIGrowable extends DebugMode {
 
     @Override
     public void debugActionClicked(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-/*
-        if (!world.isRemote) {
-            player.addChatComponentMessage(new TextComponentString("FYI: debugActionClicked, server-side"));
-        } else {
-            player.addChatComponentMessage(new TextComponentString("FYI: debugActionClicked, client-side"));
-        }
-*/
+        // NOP
     }
 
     @Override
     public void debugActionEntityClicked(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
-/*
-        player.addChatComponentMessage(new TextComponentString("FYI: debugActionEntityClicked on target: " + target));
-*/
+        // NOP
     }
 
 }

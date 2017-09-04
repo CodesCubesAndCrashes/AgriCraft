@@ -227,14 +227,6 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
     public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient) {
         return AgriCraftConfig.allowIGrowableOnCrop
                 && checkOrUseBonemeal(world, null, pos, false);
-//        if (AgriCraftConfig.allowIGrowableOnCrop) {
-//            Optional<IAgriFertilizable> crop = WorldHelper.getTile(world, pos, IAgriFertilizable.class);
-//            Optional<IAgriFertilizer> meal = AgriApi.getFertilizerRegistry().valueOf(BONEMEAL);
-//            if (crop.isPresent() && meal.isPresent()) {
-//                return crop.get().acceptsFertilizer(meal.get());
-//            }
-//        }
-//        return false;
     }
 
     /**
@@ -255,7 +247,6 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
     public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state) {
         return AgriCraftConfig.allowIGrowableOnCrop
                 && checkOrUseBonemeal(world, rand, pos, false);
-//        return this.canGrow(world, pos, state, world.isRemote);
     }
 
     /**
@@ -269,13 +260,6 @@ public class BlockCrop extends BlockTileCustomRenderedBase<TileEntityCrop> imple
         if (AgriCraftConfig.allowIGrowableOnCrop) {
             checkOrUseBonemeal(world, world.rand, pos, true);
         }
-//        WorldHelper.getTile(world, pos, TileEntityCrop.class).ifPresent(crop -> {
-//            AgriApi.getFertilizerRegistry().valueOf(BONEMEAL).ifPresent(f -> {
-//                if (crop.acceptsFertilizer(f)) {
-//                    crop.onApplyFertilizer(f, rand);
-//                }
-//            });
-//        });
     }
 
     /**
