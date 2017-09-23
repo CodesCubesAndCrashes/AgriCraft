@@ -46,7 +46,7 @@ public class BlockSeedStorageController extends BlockCustomWood<TileEntitySeedSt
 
     @Override
     public boolean isEnabled() {
-        return AgriCraftConfig.disableSeedWarehouse;
+        return !AgriCraftConfig.disableSeedWarehouse;
     }
 
 }

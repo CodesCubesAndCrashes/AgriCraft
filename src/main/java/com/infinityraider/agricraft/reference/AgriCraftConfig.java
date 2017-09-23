@@ -37,8 +37,8 @@ public class AgriCraftConfig {
     // Irrigation
     @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Enable Irrigation", comment = "Set to true if you want to enable irrigation systems.")
     public static boolean enableIrrigation = true;
-    @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Spawn water after breaking tank", comment = "Set to false to disable placing a source block when breaking non-empty tanks.")
-    public static boolean placeWater = false;
+    //@AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Spawn water after breaking tank", comment = "Set to false to disable placing a source block when breaking non-empty tanks.")
+    //public static boolean placeWater = false;
     @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Fill tank from flowing water", comment = "Set to true to let tanks fill up when water flows above them.")
     public static boolean fillFromFlowingWater = false;
     @AgriConfigurable(category = AgriConfigCategory.IRRIGATION, key = "Channel Capacity", min = "100", max = "2000", comment = "The amount of water in mB that an irrigation channel can hold.")
@@ -68,44 +68,44 @@ public class AgriCraftConfig {
     public static float growthMultiplier = 1.0f;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Crop Stat Divisor", min = "1", max = "3", comment = "On a mutation the stats on the crop will be divided by this number.")
     public static int cropStatDivisor = 2;
-    @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Only mature crops drop seeds", comment = "Set this to true to make only mature crops drop seeds (to encourage trowel usage).")
-    public static boolean onlyMatureDropSeeds = false;
+    //@AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Only mature crops drop seeds", comment = "Set this to true to make only mature crops drop seeds (to encourage trowel usage).")
+    //public static boolean onlyMatureDropSeeds = false;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Non parent crops affect stats negatively", comment = "True means any crop that is not considered a valid parent will affect stat gain negatively.")
     public static boolean otherCropsAffectStatsNegatively = true;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Mutation Chance", min = "0", max = "1", comment = "Define mutation chance (0.0 means no mutations, only spreading and 1.0 means only mutations no spreading.")
     public static float mutationChance = Constants.DEFAULT_MUTATION_CHANCE;
-    @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Valid parents", min = "1", max = "3", comment = "What are considered valid parents for stat increasing: 1 = Any. 2 = Mutation parents and identical crops. 3 = Only identical crops.")
-    public static int validParents = 2;
+    //@AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Valid parents", min = "1", max = "3", comment = "What are considered valid parents for stat increasing: 1 = Any. 2 = Mutation parents and identical crops. 3 = Only identical crops.")
+    //public static int validParents = 2;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Single spread stat increase", comment = "Set to true to allow crops that spread from one single crop to increase stats.")
     public static boolean singleSpreadsIncrement = false;
     @AgriConfigurable(key = "Wipe Grass Drops", category = AgriConfigCategory.FARMING, comment = "Determines if AgriCraft should completeley override grass drops with those confiured in the JSON files.")
     public static boolean wipeGrassDrops = false;
 
     // Weeds
-    @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Weeds destroy crop sticks", comment = "Set this to true to have weeds destroy the crop sticks when they are broken with weeds (to encourage rake usage).")
-    public static boolean weedsDestroyCropSticks = false;
+    //@AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Weeds destroy crop sticks", comment = "Set this to true to have weeds destroy the crop sticks when they are broken with weeds (to encourage rake usage).")
+    //public static boolean weedsDestroyCropSticks = false;
     @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Crossover Chance", min = "0.05", max = "0.95", comment = "The base chance for a crossover to occur during any given tick. Setting this 95% is of questionable morality.")
     public static float crossOverChance = 0.15f;
-    @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Weed Growth Rate", min = "10", max = "50", comment = "The average number of growth ticks for the weed to grow.")
-    public static int defaultGrowthChance = 50;
-    @AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Raking weeds drops items", comment = "Set to false if you wish to disable drops from raking weeds.")
-    public static boolean rakingDrops = true;
+    //@AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Weed Growth Rate", min = "10", max = "50", comment = "The average number of growth ticks for the weed to grow.")
+    //public static int defaultGrowthChance = 50;
+    //@AgriConfigurable(category = AgriConfigCategory.FARMING, key = "Raking weeds drops items", comment = "Set to false if you wish to disable drops from raking weeds.")
+    //public static boolean rakingDrops = true;
 
     // World Generation
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Disable World Gen", comment = "Set to true to disable world gen, no greenhouses will spawn in villages.")
-    public static boolean disableWorldGen = false;
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Greenhouse weight", min = "0", max = "100", comment = "The weight for a greenhouse to be generated in a village.")
-    public static int greenhouseWeight = 10;
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Greenhouse limit", min = "0", max = "2", comment = "The maximum number of greenhouses per village.")
-    public static int greenhouseLimit = 1;
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Irrigated greenhouse weight", min = "0", max = "100", comment = "The weight for an irrigated greenhouse to be generated in a village.")
-    public static int greenhouseIrrigatedWeight = 2;
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Irrigated greenhouse limit", min = "0", max = "2", comment = "The maximum number of irrigated greenhouses per village.")
-    public static int greenhouseIrrigatedLimit = 1;
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Enable villagers", comment = "Set to false if you wish to disable villagers spawning in the AgriCraft greenhouses.")
-    public static boolean villagerEnabled = true;
-    @AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Maximum crop tier", min = "1", max = "5", comment = "The maximum tier of plants that will spawn in greenhouses.")
-    public static int greenHouseMaxTier = 3;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Disable World Gen", comment = "Set to true to disable world gen, no greenhouses will spawn in villages.")
+    //public static boolean disableWorldGen = false;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Greenhouse weight", min = "0", max = "100", comment = "The weight for a greenhouse to be generated in a village.")
+    //public static int greenhouseWeight = 10;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Greenhouse limit", min = "0", max = "2", comment = "The maximum number of greenhouses per village.")
+    //public static int greenhouseLimit = 1;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Irrigated greenhouse weight", min = "0", max = "100", comment = "The weight for an irrigated greenhouse to be generated in a village.")
+    //public static int greenhouseIrrigatedWeight = 2;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Irrigated greenhouse limit", min = "0", max = "2", comment = "The maximum number of irrigated greenhouses per village.")
+    //public static int greenhouseIrrigatedLimit = 1;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Enable villagers", comment = "Set to false if you wish to disable villagers spawning in the AgriCraft greenhouses.")
+    //public static boolean villagerEnabled = true;
+    //@AgriConfigurable(category = AgriConfigCategory.WORLD, key = "Maximum crop tier", min = "1", max = "5", comment = "The maximum tier of plants that will spawn in greenhouses.")
+    //public static int greenHouseMaxTier = 3;
 
     // Client
     //@AgriConfigurable(category = AgriConfigCategory.CLIENT, key = "Condense custom wood blocks in NEI", comment = "Set to true to condense all entries for custom wood blocks into one entry in NEI.")
@@ -117,9 +117,9 @@ public class AgriCraftConfig {
     public static boolean disableParticles = false;
 
     //seed storage
-    @AgriConfigurable(category = AgriConfigCategory.STORAGE, key = "Disable seed storage system", comment = "Set to true to disable the seed storage systems.")
+    //@AgriConfigurable(category = AgriConfigCategory.STORAGE, key = "Disable seed storage system", comment = "Set to true to disable the seed storage systems.")
     public static boolean disableSeedStorage = false;
-    @AgriConfigurable(category = AgriConfigCategory.STORAGE, key = "Disable seed storage warehouses", comment = "Set to true to disable the seed storage warehouse blocks.")
+    //@AgriConfigurable(category = AgriConfigCategory.STORAGE, key = "Disable seed storage warehouses", comment = "Set to true to disable the seed storage warehouse blocks.")
     public static boolean disableSeedWarehouse = false;
 
     // Decoration
